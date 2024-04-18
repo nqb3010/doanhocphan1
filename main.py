@@ -13,29 +13,25 @@ screen_width = 800
 screen_height = 600
 screen = pygame.display.set_mode((screen_width, screen_height))
 
-# Tạo hình ảnh
-image = pygame.image.load("piston1.png")
-
 # Thu nhỏ ảnh piston về kích thước 150x150
-image = pygame.transform.scale(image, (150, 150))
 lines = [((400, 240), (400, 260)),
-          ((400, 260), (800, 260)),  # Đoạn thẳng từ (100, 100) đến (200, 200)
-         ((800, 260), (800, 345)),  # Đoạn thẳng từ (300, 300) đến (500, 100)
-         ((800, 345), (400, 345)),
+          ((400, 260), (700, 260)),  # Đoạn thẳng từ (100, 100) đến (200, 200)
+         ((700, 260), (700, 345)),  # Đoạn thẳng từ (300, 300) đến (500, 100)
+         ((700, 345), (400, 345)),
          ((400, 365), (400, 345))]   # Đoạn thẳng từ (50, ((800, 345), (500, 345))200) đến (400, 100)
 
 # Vị trí ban đầu của hình ảnh
-image_width = image.get_width()
-image_height = image.get_height()
 x = 400
-y = (screen_height - image_height) / 2
+y = 300
 increasing = True
 # Biến kiểm soát vòng lặp chính
 running = True
 # Vòng lặp chính
 while True:
 
-
+    #fps = 60
+    clock = pygame.time.Clock()
+    clock.tick(60)
 
     # Xử lý sự kiện
     for event in pygame.event.get():
@@ -57,12 +53,13 @@ while True:
     # Vẽ các đoạn thẳng
     for line in lines:
         pygame.draw.line(screen, (255, 255, 255), line[0], line[1], 6)
+    #vẽ hình vuông
 
     point_x = center_x + int(radius * math.cos(math.radians(angle)))
     point_y = center_y + int(radius * math.sin(math.radians(angle)))
 
     # Vẽ hình ảnh lên màn hình
-    if x >= 650:
+    if x >= 620:
         increasing = False  # Khi x đạt 650, thay đổi hướng giảm dần
     if increasing:
         pygame.time.delay(10)
@@ -78,11 +75,14 @@ while True:
     if angle >= 360:
         angle = 0
     # Vẽ dây nối từ trục quay tới hình ảnh piston
-    pygame.draw.line(screen, (255, 255, 255), (point_x, point_y), (x + image_width / 2, y + image_height / 2), 5)
+    pygame.draw.line(screen, (255, 255, 255), (point_x, point_y), (x, y), 5)
     print(point_x, point_y)
     # Vẽ hình tròn và điểm trên hình tròn
     pygame.draw.circle(screen, (255, 255, 255), (center_x, center_y), radius, 1)
     pygame.draw.circle(screen, (255, 0, 0), (int(point_x), int(point_y)), 5)
+    # Vẽ hình ảnh piston là hình vuông
+    # pygame.draw.rect(screen, (255, 255, 255), (x, y, 80, 80))
+    #hình vuông dịch len trên
+    pygame.draw.rect(screen, (255, 255, 255), (x, y-36, 80, 80))
 
-    screen.blit(image, (x, y))
     pygame.display.update()
