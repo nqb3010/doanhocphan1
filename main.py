@@ -80,9 +80,7 @@ while True:
     # Vẽ hình tròn và điểm trên hình tròn
     pygame.draw.circle(screen, (255, 255, 255), (center_x, center_y), radius, 1)
     pygame.draw.circle(screen, (255, 0, 0), (int(point_x), int(point_y)), 5)
-    # Vẽ hình ảnh piston là hình vuông
-    # pygame.draw.rect(screen, (255, 255, 255), (x, y, 80, 80))
-    #hình vuông dịch len trên
+    # Vẽ hình ảnh piston
     pygame.draw.rect(screen, (255, 255, 255), (x, y-36, 80, 80))
 
     pygame.display.update()
