@@ -84,3 +84,4 @@ while True:
     pygame.draw.rect(screen, (255, 255, 255), (x, y-36, 80, 80))
 
     pygame.display.update()
+    #pygame.time.delay(10)
