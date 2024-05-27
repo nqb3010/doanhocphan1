@@ -13,6 +13,7 @@ screen_width = 800
 screen_height = 600
 screen = pygame.display.set_mode((screen_width, screen_height))
 
+pygame.display.set_caption("Piston")
 # Thu nhỏ ảnh piston về kích thước 150x150
 lines = [((400, 240), (400, 260)),
           ((400, 260), (700, 260)),  # Đoạn thẳng từ (100, 100) đến (200, 200)
@@ -63,20 +64,21 @@ while True:
         increasing = False  # Khi x đạt 650, thay đổi hướng giảm dần
     if increasing:
         pygame.time.delay(10)
-        x += 5.3 * speed  # Tăng giá trị của x nếu đang trong quá trình tăng
+        x += 1.5 * speed  # Tăng giá trị của x nếu đang trong quá trình tăng
     else:
         pygame.time.delay(10)
-        x -= 5.3 * speed  # Giảm giá trị của x nếu đang trong quá trình giảm
+        x -= 1 * speed  # Giảm giá trị của x nếu đang trong quá trình giảm
 
     if x <= 400:  # Khi x giảm về 299, thoát khỏi vòng lặp
         increasing = True
     pygame.time.delay(10)
-    angle += 2 * speed
+    angle += 1 * speed
     if angle >= 360:
+        # Khi góc quay đạt 180 độ dừng lại
         angle = 0
+
     # Vẽ dây nối từ trục quay tới hình ảnh piston
     pygame.draw.line(screen, (255, 255, 255), (point_x, point_y), (x, y), 5)
-    print(point_x, point_y)
     # Vẽ hình tròn và điểm trên hình tròn
     pygame.draw.circle(screen, (255, 255, 255), (center_x, center_y), radius, 1)
     pygame.draw.circle(screen, (255, 0, 0), (int(point_x), int(point_y)), 5)
