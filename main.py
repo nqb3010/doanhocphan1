@@ -3,7 +3,7 @@ import math
 import sys
 # Khởi tạo Pygame
 pygame.init()
-angle = 360  # Góc ban đầu
+angle = 270  # Góc ban đầu
 radius = 90  # Bán kính của hình tròn
 center_x = 120  # Tọa độ x của tâm hình tròn
 center_y = 300  # Tọa độ y của tâm hình tròn
@@ -41,7 +41,7 @@ while True:
             pygame.quit()
             running = False
         elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_ESCAPE:
+            if event.key == pygame.K_ESCAPE:           
                 pygame.quit()
                 running = False
             elif event.key == pygame.K_UP:
@@ -66,24 +66,29 @@ while True:
     if x >= 620:
         increasing = False  # Khi x đạt 650, thay đổi hướng giảm dần
     if increasing:
-        pygame.time.delay(10)
-        x += 1.5 * speed  # Tăng giá trị của x nếu đang trong quá trình tăng
+        # pygame.time.delay(10)
+        x += 2.7 * speed  # Tăng giá trị của x nếu đang trong quá trình tăng
     else:
-        pygame.time.delay(10)
-        x -= 1 * speed  # Giảm giá trị của x nếu đang trong quá trình giảm
+        # pygame.time.delay(10)
+        x -= 2.5 * speed  # Giảm giá trị của x nếu đang trong quá trình giảm
 
     if x <= 400:  # Khi x giảm về 299, thoát khỏi vòng lặp
         increasing = True
     pygame.time.delay(10)
-    angle += 1 * speed
+    angle += 2 * speed
     if angle >= 360:
         # Khi góc quay đạt 180 độ dừng lại
         angle = 0
 
     # Vẽ dây nối từ trục quay tới hình ảnh piston
+    # hiện dòng speed trên màn hình
+    font = pygame.font.Font(None, 36)
+    text = font.render("Speed: " + "x"+str(speed), True, (255, 255, 255))
+    screen.blit(text, (10, 10))
+
     pygame.draw.line(screen, (255, 255, 255), (point_x, point_y), (x, y), 5)
-    pygame.draw.line(screen, (255, 255, 255), (120, 300), (point_x, point_y), 1)
-    pygame.draw.line(screen, (255, 255, 255), (120, 300), (px, py), 1)
+    pygame.draw.line(screen, (255, 255, 255), (center_x, center_y), (point_x, point_y), 2)
+    pygame.draw.line(screen, (255, 255, 255), (center_x, center_y), (px, py), 2)
     #vẽ điểm ở tâm hình tròn
     pygame.draw.circle(screen, (255, 255, 255), (center_x, center_y), 5)
     # Vẽ hình tròn và điểm trên hình tròn
