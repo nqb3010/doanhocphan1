@@ -16,9 +16,9 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Piston")
 # Tạo danh sách chứa các đoạn thẳng
 lines = [((400, 240), (400, 260)),
-          ((400, 260), (700, 260)), 
-         ((700, 260), (700, 345)),  
-         ((700, 345), (400, 345)),
+          ((400, 260), (650, 260)), 
+         ((650, 260), (650, 345)),  
+         ((650, 345), (400, 345)),
          ((400, 365), (400, 345))]   
 
 # Vị trí ban đầu của hình ảnh
@@ -63,14 +63,14 @@ while True:
     px = 2 * center_x - point_x
     py = 2 * center_y - point_y
     # Vẽ hình ảnh lên màn hình
-    if x >= 620:
+    if x >= 570:
         increasing = False  # Khi x đạt 650, thay đổi hướng giảm dần
     if increasing:
         # pygame.time.delay(10)
-        x += 2.7 * speed  # Tăng giá trị của x nếu đang trong quá trình tăng
+        x += 2 * speed  # Tăng giá trị của x nếu đang trong quá trình tăng
     else:
         # pygame.time.delay(10)
-        x -= 2.5 * speed  # Giảm giá trị của x nếu đang trong quá trình giảm
+        x -= 2 * speed  # Giảm giá trị của x nếu đang trong quá trình giảm
 
     if x <= 400:  # Khi x giảm về 299, thoát khỏi vòng lặp
         increasing = True
@@ -92,7 +92,7 @@ while True:
     #vẽ điểm ở tâm hình tròn
     pygame.draw.circle(screen, (255, 255, 255), (center_x, center_y), 5)
     # Vẽ hình tròn và điểm trên hình tròn
-    pygame.draw.circle(screen, (255, 255, 255), (center_x, center_y), radius, 1)
+    pygame.draw.circle(screen, (255, 255, 255), (center_x, center_y), radius, 3)
     pygame.draw.circle(screen, (255, 0, 0), (int(point_x), int(point_y)), 5)
     # Vẽ hình ảnh piston
     pygame.draw.rect(screen, (255, 255, 255), (x, y-36, 80, 80))
