@@ -1,100 +1,115 @@
 import pygame
 import math
 import sys
+
 # Khởi tạo Pygame
 pygame.init()
-angle = 270  # Góc ban đầu
-radius = 90  # Bán kính của hình tròn
-center_x = 120  # Tọa độ x của tâm hình tròn
-center_y = 300  # Tọa độ y của tâm hình tròn
-# Tạo màn hình
-speed = 0
-screen_width = 800
-screen_height = 600
-screen = pygame.display.set_mode((screen_width, screen_height))
 
-pygame.display.set_caption("Piston")
-# Tạo danh sách chứa các đoạn thẳng
-lines = [((400, 240), (400, 260)),
-          ((400, 260), (570, 260)), 
-         ((570, 260), (570, 345)),  
-         ((570, 345), (400, 345)),
-         ((400, 365), (400, 345))]   
+# Khai báo hằng số
+WIDTH, HEIGHT = 816, 489
+BLACK = (0, 0, 0)
+YELLOW = (255, 255, 0)
+RED = (255, 0, 0)
+WHITE = (255, 255, 255)
+AZURE = (240, 255, 255)
 
-# Vị trí ban đầu của hình ảnh
-x = 400
-y = 300
-# Biến kiểm soát hướng tăng giảm của x
-increasing = True
-# Biến kiểm soát vòng lặp chính
-running = True
+# Thiết lập màn hình
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Mô Phỏng Trục Khuỷu")
+
+# Xác định tốc độ ban đầu
+speed = 1
+
+# Xác định các thông số của trục khuỷu và piston
+crank_radius = 80
+rod_length = 150
+angle = 270
+
+org = (200, 200)  # Gốc của trục khuỷu (tâm của đường tròn)
+cylinder_width = 220
+cylinder_height = 80
+cylinder_x = 450
+cylinder_y = org[1] - cylinder_height // 2
+
+piston_width = 50
+piston_height = 80
+min_piston_x = cylinder_x
+max_piston_x = cylinder_x + cylinder_width - piston_width
+
+# Hàm trợ giúp để tính toán điểm trên đường tròn
+def circle_point(radius, angle_in_degrees, origin):
+    angle_in_radians = math.radians(angle_in_degrees)
+    x = origin[0] + radius * math.cos(angle_in_radians)
+    y = origin[1] + radius * math.sin(angle_in_radians)
+    return (x, y)
+
 # Vòng lặp chính
-while True:
-
-    #fps = 60
-    clock = pygame.time.Clock()
-    clock.tick(60)
+running = True
+while running:
+    screen.fill(BLACK)
 
     # Xử lý sự kiện
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            pygame.quit()
             running = False
         elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_ESCAPE:           
-                pygame.quit()
-                running = False
-            elif event.key == pygame.K_UP:
-                speed += 1  # Tăng tốc độ quay khi nhấn phím mũi tên lên
+            if event.key == pygame.K_UP:
+                speed += 1.0
             elif event.key == pygame.K_DOWN:
-                     if speed >0:
-                            speed -= 1  # Giảm tốc độ quay khi nhấn phím mũi tên xuống
-                # Xóa màn hình
-    screen.fill((0, 0, 0))
-    #
-    # Vẽ các đoạn thẳng
-    for line in lines:
-        pygame.draw.line(screen, (255, 255, 255), line[0], line[1], 6)
-    #vẽ hình vuông
+                speed = max(0.5, speed - 1.0)
+            elif event.key == pygame.K_ESCAPE:
+                running = False
 
-    point_x = center_x + int(radius * math.cos(math.radians(angle)))
-    point_y = center_y + int(radius * math.sin(math.radians(angle)))
-    # điểm đối xứng của point_x và point_y qua tâm hình tròn
-    px = 2 * center_x - point_x
-    py = 2 * center_y - point_y
-    # Vẽ hình ảnh lên màn hình
-    if x >= 490:
-        increasing = False  # Khi x đạt 570, thay đổi hướng giảm dần
-    if increasing:
-        # pygame.time.delay(10)
-        x += 1 * speed  # Tăng giá trị của x nếu đang trong quá trình tăng
-    else:
-        # pygame.time.delay(10)
-        x -= 1 * speed  # Giảm giá trị của x nếu đang trong quá trình giảm
+    # Tính toán vị trí
+    loc = circle_point(crank_radius, angle, org)
+    opposite_loc = circle_point(crank_radius, angle + 180, org)
+    piston_x = cylinder_x + (loc[0] - org[0]) + crank_radius
+    piston_x = max(min_piston_x, min(piston_x, max_piston_x))
+    piston_center = (piston_x + piston_width // 2, cylinder_y + (cylinder_height - piston_height) // 2 + piston_height // 2)
 
-    if x <= 400:  # Khi x giảm về 299, thoát khỏi vòng lặp
-        increasing = True
-    pygame.time.delay(10)
-    angle += 1 * speed
+    # Vẽ đường tròn của trục khuỷu
+    pygame.draw.circle(screen, AZURE, (int(org[0]), int(org[1])), crank_radius, 3)
+    pygame.draw.circle(screen, YELLOW, (int(org[0]), int(org[1])), 5)  # Điểm trung tâm
+
+    # Vẽ thanh nối
+    pygame.draw.line(screen, AZURE, loc, piston_center, 3)
+    pygame.draw.circle(screen, RED, (int(loc[0]), int(loc[1])), 5)  # Điểm di chuyển trên đường tròn
+    pygame.draw.circle(screen, RED, (int(opposite_loc[0]), int(opposite_loc[1])), 5)  # Điểm đối diện
+
+    # Vẽ piston
+    pygame.draw.rect(screen, WHITE, (piston_x, cylinder_y + (cylinder_height - piston_height) // 2, piston_width, piston_height))
+
+    # Vẽ xi-lanh
+    top_left = (cylinder_x, cylinder_y)
+    top_right = (cylinder_x + cylinder_width, cylinder_y)
+    bottom_left = (cylinder_x, cylinder_y + cylinder_height)
+    bottom_right = (cylinder_x + cylinder_width, cylinder_y + cylinder_height)
+    pygame.draw.line(screen, WHITE, top_left, top_right, 3)
+    pygame.draw.line(screen, WHITE, bottom_left, bottom_right, 3)
+    pygame.draw.line(screen, WHITE, top_right, bottom_right, 3)
+
+    #nối hai điểm màu đỏ đi qia tâm trục khuỷu
+    pygame.draw.line(screen, RED, loc, opposite_loc, 3)
+
+
+    # Các đường thẳng dọc ở bên trái của xi-lanh
+    pygame.draw.line(screen, WHITE, top_left, (cylinder_x, cylinder_y - 20), 3)
+    pygame.draw.line(screen, WHITE, bottom_left, (cylinder_x, cylinder_y + cylinder_height + 20), 3)
+
+    font = pygame.font.Font(None, 24)
+    text = font.render("Speed: " + "x"+str(int(speed)), True, (255, 255, 255))
+    screen.blit(text, (10, 10))
+    # Cập nhật góc
+    angle += speed * 0.5
     if angle >= 360:
-        # Khi góc quay đạt 180 độ dừng lại
         angle = 0
 
-    # Vẽ dây nối từ trục quay tới hình ảnh piston
-    # hiện dòng speed trên màn hình
-    font = pygame.font.Font(None, 36)
-    text = font.render("Speed: " + "x"+str(speed), True, (255, 255, 255))
-    screen.blit(text, (10, 10))
+    # Cập nhật màn hình
+    pygame.display.flip()
 
-    pygame.draw.line(screen, (255, 255, 255), (point_x, point_y), (x, y), 5)
-    pygame.draw.line(screen, (255, 255, 255), (center_x, center_y), (point_x, point_y), 2)
-    pygame.draw.line(screen, (255, 255, 255), (center_x, center_y), (px, py), 2)
-    #vẽ điểm ở tâm hình tròn
-    pygame.draw.circle(screen, (255, 255, 255), (center_x, center_y), 5)
-    # Vẽ hình tròn và điểm trên hình tròn
-    pygame.draw.circle(screen, (255, 255, 255), (center_x, center_y), radius, 3)
-    pygame.draw.circle(screen, (255, 0, 0), (int(point_x), int(point_y)), 5)
-    # Vẽ hình ảnh piston
-    pygame.draw.rect(screen, (255, 255, 255), (x, y-36, 80, 80))
+    # Điều chỉnh tốc độ khung hình
+    pygame.time.delay(10)
 
-    pygame.display.update()
+# Kết thúc chương trình
+pygame.quit()
+sys.exit()
