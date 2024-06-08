@@ -8,7 +8,7 @@ radius = 90  # Bán kính của hình tròn
 center_x = 120  # Tọa độ x của tâm hình tròn
 center_y = 300  # Tọa độ y của tâm hình tròn
 # Tạo màn hình
-speed = 1
+speed = 0
 screen_width = 800
 screen_height = 600
 screen = pygame.display.set_mode((screen_width, screen_height))
@@ -16,9 +16,9 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Piston")
 # Tạo danh sách chứa các đoạn thẳng
 lines = [((400, 240), (400, 260)),
-          ((400, 260), (650, 260)), 
-         ((650, 260), (650, 345)),  
-         ((650, 345), (400, 345)),
+          ((400, 260), (570, 260)), 
+         ((570, 260), (570, 345)),  
+         ((570, 345), (400, 345)),
          ((400, 365), (400, 345))]   
 
 # Vị trí ban đầu của hình ảnh
@@ -63,19 +63,19 @@ while True:
     px = 2 * center_x - point_x
     py = 2 * center_y - point_y
     # Vẽ hình ảnh lên màn hình
-    if x >= 570:
-        increasing = False  # Khi x đạt 650, thay đổi hướng giảm dần
+    if x >= 490:
+        increasing = False  # Khi x đạt 570, thay đổi hướng giảm dần
     if increasing:
         # pygame.time.delay(10)
-        x += 2 * speed  # Tăng giá trị của x nếu đang trong quá trình tăng
+        x += 1 * speed  # Tăng giá trị của x nếu đang trong quá trình tăng
     else:
         # pygame.time.delay(10)
-        x -= 2 * speed  # Giảm giá trị của x nếu đang trong quá trình giảm
+        x -= 1 * speed  # Giảm giá trị của x nếu đang trong quá trình giảm
 
     if x <= 400:  # Khi x giảm về 299, thoát khỏi vòng lặp
         increasing = True
     pygame.time.delay(10)
-    angle += 2 * speed
+    angle += 1 * speed
     if angle >= 360:
         # Khi góc quay đạt 180 độ dừng lại
         angle = 0
